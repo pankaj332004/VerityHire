@@ -1,0 +1,364 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}</style><style>:root{color-scheme:light dark;--md-bg:#fff;--md-text:rgba(0,0,0,.8);--md-muted:rgba(0,0,0,.6);--md-fill:rgba(0,0,0,.04);--md-fill-strong:rgba(0,0,0,.06);--md-rule:rgba(0,0,0,.1);--md-rule-strong:rgba(0,0,0,.16);--md-link:hsl(210 100% 45%)}@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])){--md-bg:#0d0d0d;--md-text:rgba(255,255,255,.85);--md-muted:rgba(255,255,255,.6);--md-fill:rgba(255,255,255,.06);--md-fill-strong:rgba(255,255,255,.09);--md-rule:rgba(255,255,255,.14);--md-rule-strong:rgba(255,255,255,.22);--md-link:hsl(210 100% 72%)}}:root[data-theme="dark"]{color-scheme:dark;--md-bg:#0d0d0d;--md-text:rgba(255,255,255,.85);--md-muted:rgba(255,255,255,.6);--md-fill:rgba(255,255,255,.06);--md-fill-strong:rgba(255,255,255,.09);--md-rule:rgba(255,255,255,.14);--md-rule-strong:rgba(255,255,255,.22);--md-link:hsl(210 100% 72%)}:root[data-theme="light"]{color-scheme:light}@media print{:root,:root[data-theme="dark"]{color-scheme:light;--md-bg:#fff;--md-text:rgba(0,0,0,.8);--md-muted:rgba(0,0,0,.6);--md-fill:rgba(0,0,0,.04);--md-fill-strong:rgba(0,0,0,.06);--md-rule:rgba(0,0,0,.1);--md-rule-strong:rgba(0,0,0,.16);--md-link:hsl(210 100% 45%)}}body{background:var(--md-bg);color:var(--md-text);max-width:720px;margin:0 auto;padding:32px;display:flex;flex-direction:column;gap:10px;font:14px/1.55 -apple-system,BlinkMacSystemFont,'SF Pro','Segoe UI',sans-serif;overflow-wrap:break-word}body>:first-child{margin-top:0}h1,h2,h3,h4,h5,h6{margin:6px 0 0;line-height:1.25;font-weight:600;text-wrap:balance}h1{font-size:1.35em}h2{font-size:1.15em;color:var(--md-muted)}h3,h4,h5,h6{font-size:1em}p,ul,ol,blockquote,table,pre,hr{margin:0}strong{font-weight:600}a{color:var(--md-link);text-decoration:none}a:hover{text-decoration:underline}ul,ol{display:flex;flex-direction:column;gap:6px;padding-left:22px}ul{list-style:disc}ol{list-style:decimal}:is(li,td,th)>*+:is(p,ul,ol,blockquote){margin-top:6px}blockquote{display:flex;flex-direction:column;gap:10px;border-left:2px solid var(--md-rule);padding-left:10px;color:var(--md-muted)}:not(pre)>code{background:var(--md-fill);padding:1px 3px;border-radius:4px;font:.92em 'SF Mono',ui-monospace,Menlo,Consolas,monospace}a>code{background:none;color:inherit}pre{background:var(--md-fill);padding:10px 12px;border-radius:6px;overflow-x:auto;font:12px/1.5 'SF Mono',ui-monospace,Menlo,Consolas,monospace;margin-block:4px}pre code{background:none;padding:0;font:inherit}table{width:100%;border-collapse:separate;border-spacing:2px;font:inherit}th,td{padding:6px 8px;border-radius:3px;text-align:left;vertical-align:top}th{background:var(--md-fill-strong);font-weight:600}td{background:var(--md-fill)}:is(th,td) :not(pre)>code{background:transparent}hr{border:0;border-top:1px solid var(--md-rule-strong);margin-block:10px}img{max-width:100%;height:auto;border-radius:4px}</style>
+</head><body>
+<h1>AI-Powered Campus Placement Portal — System Design</h1>
+<h2>1. Vision</h2>
+<p>A campus placement system where AI <strong>recommends</strong>, humans <strong>decide</strong>, and every
+decision is <strong>explainable and auditable</strong>. Differentiators beyond a standard
+ATS:</p>
+<ul>
+<li>Explainable candidate–job matching (not a black-box score)</li>
+<li>Personalized skill-gap analysis for students</li>
+<li>&quot;What-if&quot; career simulation</li>
+<li>Human-in-the-loop shortlisting with mandatory override reasons</li>
+<li>Full audit trail for fairness and compliance</li>
+</ul>
+<hr>
+<h2>2. Tech Stack</h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Technology</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Frontend</td>
+<td>React.js + Tailwind CSS</td>
+</tr>
+<tr>
+<td>Backend API</td>
+<td>Node.js + Express</td>
+</tr>
+<tr>
+<td>Database</td>
+<td>MongoDB Atlas</td>
+</tr>
+<tr>
+<td>ML Service</td>
+<td>Python (FastAPI) + scikit-learn + spaCy + Sentence-Transformers</td>
+</tr>
+<tr>
+<td>Reasoning / explanations</td>
+<td>LLM (via API)</td>
+</tr>
+<tr>
+<td>Auth</td>
+<td>JWT (access + refresh tokens)</td>
+</tr>
+<tr>
+<td>File storage</td>
+<td>Cloudinary (resumes, logos, certificates)</td>
+</tr>
+<tr>
+<td>Cache</td>
+<td>Redis (embeddings + LLM explanation cache)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>3. High-Level Architecture</h2>
+<pre><code>┌───────────────────┐        ┌──────────────────────┐        ┌─────────────────────┐
+│  React + Tailwind  │ &lt;────&gt; │   Node.js / Express    │ &lt;────&gt; │   MongoDB Atlas       │
+│  Student / Recruiter│        │   Auth, CRUD, jobs,    │        │  users, jobs,         │
+│  / Admin dashboards │        │   orchestration,       │        │  applications,        │
+└───────────────────┘        │   audit logging        │        │  audit_logs, etc.     │
+                              └──────────┬────────────┘        └─────────────────────┘
+                                          │  internal REST
+                                          ▼
+                              ┌──────────────────────┐
+                              │   Python ML Service    │
+                              │   (FastAPI)            │
+                              │  - Resume parsing       │
+                              │    (spaCy NER)          │
+                              │  - Embeddings            │
+                              │    (Sentence-            │
+                              │     Transformers)        │
+                              │  - Ranking model          │
+                              │    (scikit-learn)         │
+                              │  - Explanation &amp; skill-gap │
+                              │    generation (LLM)        │
+                              └──────────────────────┘
+</code></pre>
+<p><strong>Principle:</strong> ML service is stateless — it receives text/vectors, returns
+scores/explanations. Node + Mongo remain the single source of truth. This
+keeps the ML service easy to scale, retrain, or swap independently.</p>
+<p><strong>Addition: Redis cache.</strong> Sits behind the ML service, caching embeddings
+(keyed on <code>resumeId/jobId + modelVersion</code>) and LLM-generated explanations
+(keyed on <code>applicationId + modelVersion</code>). Without it, every score/explain
+call recomputes or re-calls the LLM even when nothing changed — wasteful
+and slow, especially for <code>/explain</code>, which is the highest-latency call in
+the pipeline. Recompute only fires when a resume, JD, or model version
+actually changes.</p>
+<hr>
+<h2>4. Core Services &amp; API Contracts</h2>
+<h3>4.1 Node/Express — key endpoints</h3>
+<pre><code>POST   /api/auth/register            student | recruiter | admin
+POST   /api/auth/login
+POST   /api/auth/refresh
+
+GET    /api/students/:id/profile
+PUT    /api/students/:id/profile
+POST   /api/students/:id/resume      → uploads to Cloudinary, triggers parse
+
+POST   /api/jobs                     (recruiter)
+GET    /api/jobs/:id
+POST   /api/jobs/:id/apply           (student)
+
+POST   /api/jobs/:id/shortlist       → hard filters + calls ML /score
+PATCH  /api/applications/:id/status  → requires `reason` if overriding AI rank
+
+POST   /api/students/:id/skill-gap   → calls ML /skill-gap
+POST   /api/students/:id/simulate    → calls ML /simulate
+
+GET    /api/admin/audit-logs
+GET    /api/admin/analytics
+</code></pre>
+<h3>4.2 Python ML Service (FastAPI) — key endpoints</h3>
+<pre><code>POST /parse-resume        { resumeText }               → parsed entities (skills, edu, exp)
+POST /embed                { text }                     → vector
+POST /score                { jdText, resumes: [...] }   → ranked list + feature breakdown
+POST /explain               { jd, resume, features }     → LLM-generated explanation
+POST /skill-gap             { studentProfile, jobOrRole } → missing skills + resources
+POST /simulate               { studentProfile, hypotheticalSkills, target } → projected score delta
+</code></pre>
+<p>Keep <code>/score</code> fast (embeddings + sklearn only); route <code>/explain</code> and
+<code>/skill-gap</code> through the LLM as <strong>separate, cacheable calls</strong> so recruiters
+aren't waiting on LLM latency just to see a ranked list.</p>
+<hr>
+<h2>5. AI Shortlisting Pipeline</h2>
+<ol>
+<li><strong>Hard filters</strong> (Node/Mongo query — no ML): CGPA cutoff, branch, backlogs,
+batch year.</li>
+<li><strong>Resume parsing</strong> (spaCy NER): extract skills, education, experience,
+projects from resume text.</li>
+<li><strong>Semantic matching</strong> (Sentence-Transformers): embed JD and resume/skill
+sections, cosine similarity score.</li>
+<li><strong>Ranking model</strong> (scikit-learn): combine semantic score + skill overlap %
+<ul>
+<li>CGPA fit + experience relevance into a final score. Start with a
+weighted formula; retrain on real accept/reject labels once available.</li>
+</ul>
+</li>
+<li><strong>Explanation layer</strong> (LLM): generate a human-readable rationale citing
+only matched/missing evidence — no invented claims.</li>
+</ol>
+<hr>
+<h2>6. MongoDB Schema</h2>
+<pre><code class="language-js">// users
+{ _id, email, passwordHash, role: &#34;student&#34;|&#34;recruiter&#34;|&#34;admin&#34;, isVerified, createdAt }
+
+// students
+{
+  _id, userId, name, rollNumber, branch, batch, cgpa, backlogs,
+  resumeUrl, resumeText,
+  parsedProfile: {
+    skills: [String],
+    experience: [{ title, org, duration, description }],
+    education: [{ degree, institute, year }],
+    projects: [{ title, description, techStack }]
+  },
+  embeddings: { vector: [Number], modelVersion }
+}
+
+// recruiters
+{ _id, userId, companyName, companyLogoUrl, website, verified }
+
+// jobs
+{
+  _id, recruiterId, title, description, jdText,
+  skillsRequired: [String],
+  eligibility: { minCgpa, branches: [String], maxBacklogs, batch },
+  ctc, location, deadline, status: &#34;open&#34;|&#34;closed&#34;,
+  jdEmbedding: { vector: [Number], modelVersion }
+}
+
+// applications
+{
+  _id, jobId, studentId,
+  status: &#34;applied&#34;|&#34;shortlisted&#34;|&#34;interview&#34;|&#34;offered&#34;|&#34;rejected&#34;,
+  aiScore: {
+    finalScore: Number,
+    featureBreakdown: [{ feature, value, weight }],
+    matchedSkills: [String],
+    missingSkills: [String],
+    explanation: { summary: String, modelVersion: String },
+    scoredAt: Date
+  },
+  appliedAt,
+  statusHistory: [{ status, changedAt, changedBy }]
+}
+
+// skill_gap_reports
+{
+  studentId, targetJobId, // or targetRole for aggregate mode
+  currentSkills: [String], requiredSkills: [String], missingSkills: [String],
+  recommendations: [{ skill, resourceType, title, url }],
+  generatedAt
+}
+
+// audit_logs (append-only)
+{
+  entityType, entityId,
+  action: &#34;ai_scored&#34;|&#34;recruiter_shortlisted&#34;|&#34;recruiter_rejected&#34;|&#34;recruiter_overrode_ai&#34;|&#34;status_changed&#34;,
+  actor: { type: &#34;system&#34;|&#34;user&#34;, userId, role },
+  before, after,
+  reason: String,          // required on override
+  aiScoreAtTimeOfAction: Number,
+  timestamp
+}
+</code></pre>
+<p><strong>Indexes:</strong> <code>applications{jobId,status}</code>, <code>students{branch,cgpa,batch}</code>,
+<code>jobs{status,deadline}</code>.</p>
+<p><strong>Scale note:</strong> raw vector arrays in Mongo are fine up to a few thousand
+students. Beyond that, migrate to <strong>Atlas Vector Search</strong> for the embedding
+similarity step instead of computing cosine similarity in Python.</p>
+<hr>
+<h2>7. Explainability, Skill-Gap &amp; What-If Simulation</h2>
+<ul>
+<li><strong>Explainability:</strong> every <code>aiScore</code> carries a <code>featureBreakdown</code> (cheap,
+deterministic) plus an LLM <code>summary</code> (cached, not regenerated per view).
+If/when the sklearn model is trained on real labels, add SHAP values for
+true per-prediction attribution.</li>
+<li><strong>Skill-gap analysis:</strong> reuses <code>missingSkills</code> from scoring. Support both
+per-job (&quot;why you weren't a top match here&quot;) and aggregate mode (most
+common missing skills across a target role category).</li>
+<li><strong>What-if simulation:</strong> re-runs scoring with a hypothetical skill set
+added to the student's profile — no new resume parsing needed. Keep it
+stateless/on-demand unless you want engagement analytics.</li>
+</ul>
+<hr>
+<h2>8. Human-in-the-Loop &amp; Audit Trail</h2>
+<ul>
+<li>AI never finalizes a decision — it ranks and recommends only.</li>
+<li>Every state change (AI score, recruiter shortlist/reject, status change)
+writes an immutable <code>audit_logs</code> entry.</li>
+<li><strong>Overriding the AI's top recommendation requires a reason</strong> (dropdown +
+free text). This is both the fairness/compliance trail and labeled
+training data for future model retraining.</li>
+<li>Admin dashboard can compute shortlist-rate breakdowns (branch, category,
+etc.) directly from this log without any redesign.</li>
+</ul>
+<hr>
+<h2>9. Dashboards</h2>
+<p><strong>Student</strong></p>
+<ul>
+<li>Application tracker, profile/resume with parsed-data preview (editable)</li>
+<li>Skill-gap reports (per-job + aggregate)</li>
+<li>What-if simulator</li>
+<li>Per-application explanation view</li>
+</ul>
+<p><strong>Recruiter</strong></p>
+<ul>
+<li>Post/manage jobs</li>
+<li>Ranked candidates with score breakdown + explanation inline</li>
+<li>Shortlist/reject actions, mandatory reason on AI override</li>
+<li>Bulk actions, applicant funnel analytics</li>
+</ul>
+<p><strong>Admin (TPO)</strong></p>
+<ul>
+<li>Cross-company placement analytics</li>
+<li>Audit log viewer (filter by job/recruiter/student)</li>
+<li>Fairness/bias dashboard (shortlist rates across branches/categories)</li>
+<li>Model version tracking, job approval workflow, user management</li>
+</ul>
+<hr>
+<h2>10. Build Roadmap</h2>
+<p>Build bottom-up: data model → plain CRUD → ML pipeline → intelligence
+features → polish. Each phase should leave you with something runnable,
+not a half-finished layer.</p>
+<h3>Phase 0 — Setup (few days)</h3>
+<ul>
+<li>Repo structure: <code>client/</code> (React), <code>server/</code> (Node), <code>ml-service/</code> (Python)</li>
+<li>MongoDB Atlas cluster + connection from Node</li>
+<li>Cloudinary account + upload test</li>
+<li>Env config for all three services, <code>.env</code> conventions agreed early</li>
+</ul>
+<h3>Phase 1 — Auth &amp; core CRUD (Node + Mongo)</h3>
+<ul>
+<li>User model + JWT auth (register/login/refresh) for all three roles</li>
+<li>Student profile CRUD, Recruiter profile CRUD</li>
+<li>Job posting CRUD (recruiter creates/edits/closes jobs)</li>
+<li>Basic role-guarded routes (middleware checking <code>role</code> on each request)</li>
+<li><strong>Checkpoint:</strong> a recruiter can post a job, a student can view it — no ML yet.</li>
+</ul>
+<h3>Phase 2 — Resume pipeline</h3>
+<ul>
+<li>Resume upload → Cloudinary, store URL on student profile</li>
+<li>Text extraction (pdfplumber/PyMuPDF) in the Python service</li>
+<li>spaCy NER to populate <code>parsedProfile</code> (skills, education, experience)</li>
+<li>Let students <strong>review/edit</strong> parsed data — don't trust extraction blindly</li>
+<li><strong>Checkpoint:</strong> uploading a resume populates a structured profile the
+student can see and correct.</li>
+</ul>
+<h3>Phase 3 — Matching &amp; shortlisting (the core ML loop)</h3>
+<ul>
+<li>Hard filters in Node (CGPA, branch, backlog, batch) — plain Mongo query</li>
+<li><code>/embed</code> endpoint: Sentence-Transformers embeddings for JD + resumes</li>
+<li><code>/score</code> endpoint: cosine similarity + weighted formula → <code>finalScore</code></li>
+<li>Application flow: apply → status pipeline → recruiter sees ranked list</li>
+<li><strong>Checkpoint:</strong> recruiter can post a job, see a ranked shortlist with a
+numeric score, and move applications through statuses manually.</li>
+</ul>
+<h3>Phase 4 — Audit logging</h3>
+<ul>
+<li><code>audit_logs</code> collection, written on every AI score event and every
+status change</li>
+<li>Enforce <strong>mandatory reason</strong> when a recruiter's decision overrides the
+AI's top-ranked candidates</li>
+<li>Do this now, not later — retrofitting audit logs onto an existing flow
+is much more error-prone than building it in from the start</li>
+<li><strong>Checkpoint:</strong> every action in Phase 3's flow now has a queryable
+history.</li>
+</ul>
+<h3>Phase 5 — Explainability</h3>
+<ul>
+<li><code>/explain</code> endpoint: LLM call with JD + resume + feature breakdown,
+constrained prompt (cite only matched/missing evidence, no invention)</li>
+<li>Redis cache keyed on <code>applicationId + modelVersion</code> so explanations
+aren't regenerated on every page view</li>
+<li>Surface <code>featureBreakdown</code> (deterministic, free) and <code>summary</code>
+(LLM-generated, cached) in the recruiter's ranked list view</li>
+<li><strong>Checkpoint:</strong> every score has a &quot;why&quot; a recruiter can read without
+waiting on a fresh LLM call.</li>
+</ul>
+<h3>Phase 6 — Skill-gap analysis</h3>
+<ul>
+<li><code>/skill-gap</code> endpoint reusing <code>missingSkills</code> already computed in scoring</li>
+<li>Per-job mode first (simpler), then aggregate mode across a role category</li>
+<li>Static curated skill → resource mapping (don't build a recommender yet)</li>
+<li><strong>Checkpoint:</strong> a rejected/low-scoring student sees concretely what
+skills to work on.</li>
+</ul>
+<h3>Phase 7 — What-if simulator</h3>
+<ul>
+<li><code>/simulate</code> endpoint: re-run scoring with a hypothetical skill set added</li>
+<li>Simple UI: toggle/add skills, see projected score change live</li>
+<li>Stateless — no persistence needed unless you want engagement analytics</li>
+<li><strong>Checkpoint:</strong> students can experiment with &quot;what if I learned X&quot; and
+see the score delta immediately.</li>
+</ul>
+<h3>Phase 8 — Admin dashboard &amp; analytics</h3>
+<ul>
+<li>Placement analytics (branch-wise, CGPA-band placement rates)</li>
+<li>Audit log viewer with filters</li>
+<li>Fairness dashboard: shortlist rates sliced by branch/category, computed
+straight from <code>audit_logs</code></li>
+<li>Model version display (which scoring model is live)</li>
+</ul>
+<h3>Phase 9 — Polish &amp; hardening</h3>
+<ul>
+<li>Retrain the scikit-learn ranking model on real <code>shortlisting_feedback</code>
+labels if you've accumulated enough recruiter decisions; add SHAP values
+for per-prediction attribution if you do</li>
+<li>Rate limiting, input validation, error handling across all three services</li>
+<li>Loading states, empty states, and mobile responsiveness on all dashboards</li>
+<li>Basic test coverage on the scoring pipeline especially — it's the part
+most likely to silently regress</li>
+</ul>
+<p><strong>Rule of thumb:</strong> don't start Phase N+1 until Phase N's checkpoint
+actually works end-to-end. It's tempting to build the what-if simulator
+because it's the flashy part, but it's useless without a working scoring
+pipeline underneath it.</p>
+
+</body></html>
